@@ -5,18 +5,18 @@ namespace Wisegar.Toolkit.Services.Email
     /// </summary>
     public static class EmailServiceUsageExamples
     {
-        /// <summary>
-        /// Simple email example
-        /// </summary>
-        public static async Task SendSimpleEmailExample(IEmailService emailService)
-        {
-            await emailService.SendEmailAsync(
-                to: "user@example.com",
-                subject: "Welcome to the system",
-                body: "Hello, welcome to our system.",
-                isHtml: false
-            );
-        }
+        ///// <summary>
+        ///// Simple email example
+        ///// </summary>
+        //public static async Task SendSimpleEmailExample(IEmailService emailService)
+        //{
+        //    await emailService.SendEmailAsync(
+        //        to: "user@example.com",
+        //        subject: "Welcome to the system",
+        //        body: "Hello, welcome to our system.",
+        //        isHtml: false
+        //    );
+        //}
 
         /// <summary>
         /// Example of HTML email to multiple recipients
@@ -37,12 +37,12 @@ namespace Wisegar.Toolkit.Services.Email
                 </body>
                 </html>";
 
-            await emailService.SendEmailAsync(
-                to: destinatarios,
-                subject: "Daily System Report",
-                body: htmlBody,
-                isHtml: true
-            );
+            //await emailService.SendEmailAsync(
+            //    to: destinatarios,
+            //    subject: "Daily System Report",
+            //    body: htmlBody,
+            //    isHtml: true
+            //);
         }
 
         /// <summary>
@@ -92,19 +92,6 @@ namespace Wisegar.Toolkit.Services.Email
         }
 
         /// <summary>
-        /// Error notification example (specific use of the Monitor Service)
-        /// </summary>
-        public static async Task SendErrorNotificationExample(IEmailService emailService)
-        {
-            await emailService.SendErrorNotificationAsync(
-                websiteUrl: "https://mycompany.com",
-                statusCode: 500,
-                status: "ERROR",
-                errorMessage: "Internal Server Error - Database connection failed"
-            );
-        }
-
-        /// <summary>
         /// Welcome email example with template
         /// </summary>
         public static async Task SendWelcomeEmailExample(IEmailService emailService, string userName, string userEmail)
@@ -143,12 +130,12 @@ namespace Wisegar.Toolkit.Services.Email
                 </body>
                 </html>";
 
-            await emailService.SendEmailAsync(
-                to: userEmail,
-                subject: "¡Welcome to our platform!",
-                body: welcomeTemplate,
-                isHtml: true
-            );
+            //await emailService.SendEmailAsync(
+            //    to: userEmail,
+            //    subject: "¡Welcome to our platform!",
+            //    body: welcomeTemplate,
+            //    isHtml: true
+            //);
         }
     }
 }

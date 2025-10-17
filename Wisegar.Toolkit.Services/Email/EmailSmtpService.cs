@@ -26,7 +26,7 @@ namespace Wisegar.Toolkit.Services.Email
         {
             try
             {
-                if (to == null || !to.Any())
+                if (to == null || to.Length == 0)
                 {
                     _logger.LogWarning("There are no recipients specified to send the email to.");
                     return;
@@ -52,7 +52,7 @@ namespace Wisegar.Toolkit.Services.Email
         /// </summary>
         public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = false)
         {
-            await SendEmailAsync(new[] { to }, subject, body, isHtml);
+            await SendEmailAsync([to], subject, body, isHtml);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Wisegar.Toolkit.Services.Email
         {
             try
             {
-                if (!emailMessage.To.Any())
+                if (emailMessage.To.Count == 0)
                 {
                     _logger.LogWarning("There are no recipients specified in the EmailMessage");
                     return;
