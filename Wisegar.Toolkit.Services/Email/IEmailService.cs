@@ -1,4 +1,6 @@
-﻿namespace Wisegar.Toolkit.Services.Email
+﻿using Wisegar.Toolkit.Models.Email;
+
+namespace Wisegar.Toolkit.Services.Email
 {
     public interface IEmailService
     {

@@ -365,3 +365,4 @@ FodyWeavers.xsd
 obj
 .vscode
 .vs
+/Wisegar.Toolkit.Services.xTest/appsettings.development.json

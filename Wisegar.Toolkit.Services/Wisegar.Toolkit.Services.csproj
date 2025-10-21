@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.Graph" Version="5.94.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Wisegar.Toolkit.Models\Wisegar.Toolkit.Models.csproj" />
+  </ItemGroup>
+
 </Project>

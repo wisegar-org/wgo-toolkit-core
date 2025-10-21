@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wisegar.Toolkit.Services.MSGraph
+namespace Wisegar.Toolkit.Models.MSGraph
 {
     public class MSGraphSettings
     {
-        public const string SectionName = "MSGraphSettings";
+        public const string SectionName = "MSGraph";
         public string Principal { get; set; } = string.Empty;
         public string TenantId { get; set; } = string.Empty;
         public string ClientId { get; set; } = string.Empty;

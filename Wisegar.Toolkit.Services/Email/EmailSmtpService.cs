@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using Wisegar.Toolkit.Models.Email;
 
 namespace Wisegar.Toolkit.Services.Email
 {
@@ -10,10 +11,10 @@ namespace Wisegar.Toolkit.Services.Email
     /// </summary>
     public class EmailSmtpService : IEmailService
     {
-        private readonly EmailSettings _emailSettings;
+        private readonly EmailSmtpSettings _emailSettings;
         private readonly ILogger<EmailSmtpService> _logger;
 
-        public EmailSmtpService(IOptions<EmailSettings> emailSettings, ILogger<EmailSmtpService> logger)
+        public EmailSmtpService(IOptions<EmailSmtpSettings> emailSettings, ILogger<EmailSmtpService> logger)
         {
             _emailSettings = emailSettings.Value;
             _logger = logger;
@@ -114,7 +115,7 @@ namespace Wisegar.Toolkit.Services.Email
         /// </summary>
         private SmtpClient CreateSmtpClient()
         {
-            return new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort)
+            return new SmtpClient(_emailSettings.Host, _emailSettings.Port)
             {
                 EnableSsl = _emailSettings.EnableSsl,
                 Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password)

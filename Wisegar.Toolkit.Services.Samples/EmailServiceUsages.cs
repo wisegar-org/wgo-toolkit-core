@@ -1,9 +1,9 @@
-namespace Wisegar.Toolkit.Services.Email
+﻿using Wisegar.Toolkit.Models.Email;
+using Wisegar.Toolkit.Services.Email;
+
+namespace Wisegar.Toolkit.Services.Samples
 {
-    /// <summary>
-    /// Examples of using the generic email service
-    /// </summary>
-    public static class EmailServiceUsageExamples
+    public class EmailServiceUsages
     {
         ///// <summary>
         ///// Simple email example
