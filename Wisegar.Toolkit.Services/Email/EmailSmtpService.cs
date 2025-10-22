@@ -87,7 +87,7 @@ namespace Wisegar.Toolkit.Services.Email
         /// <summary>
         /// Sends a specific error notification for website monitoring
         /// </summary>
-        public async Task SendErrorNotificationAsync(string websiteUrl, int statusCode, string status, string? errorMessage = null)
+        /*public async Task SendErrorNotificationAsync(string websiteUrl, int statusCode, string status, string? errorMessage = null)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace Wisegar.Toolkit.Services.Email
             {
                 _logger.LogError(ex, "Error sending error notification for {url}", websiteUrl);
             }
-        }
+        }*/
 
         /// <summary>
         /// Create the configured SMTP client
@@ -220,7 +220,7 @@ namespace Wisegar.Toolkit.Services.Email
         /// <summary>
         /// Build the HTML body for monitoring error notifications
         /// </summary>
-        private string BuildErrorNotificationBody(string websiteUrl, int statusCode, string status, string? errorMessage)
+        /*private string BuildErrorNotificationBody(string websiteUrl, int statusCode, string status, string? errorMessage)
         {
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -245,6 +245,6 @@ namespace Wisegar.Toolkit.Services.Email
         </html>";
 
             return body;
-        }
+        }*/
     }
 }
