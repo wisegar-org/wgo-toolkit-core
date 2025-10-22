@@ -14,6 +14,10 @@ namespace Wisegar.Toolkit.Models.Email
         /// <summary>
         /// Main email recipients
         /// </summary>
+        public required string From { get; set; }
+        /// <summary>
+        /// Main email recipients
+        /// </summary>
         public List<string> To { get; set; } = new();
 
         /// <summary>

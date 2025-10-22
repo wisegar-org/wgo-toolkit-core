@@ -20,6 +20,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
            
             var emailMessage = new EmailMessage
             {
+                From = "yariel.re@gmail.com",
                 To = ["yariel.re@gmail.com"],
                 Subject = "MS GRAPH - Monthly Report - CONFIDENTIAL",
                 Body = @"
