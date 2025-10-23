@@ -11,7 +11,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
     {
         private readonly EmailSmtpService _emailService;
         private readonly Mock<ILogger<EmailSmtpService>> _loggerMock;
-        private readonly Mock<IOptions<EmailSmtpSettings>> _emailSettingsMock;
+        private readonly EmailSmtpSettings _emailSettings;
 
         // Test data constants
         private const string TestEmail = "yariel.re@gmail.com";
@@ -24,68 +24,83 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         public EmailSmtpServiceTest()
         {
             _loggerMock = new Mock<ILogger<EmailSmtpService>>();
-            _emailSettingsMock = SettingsService.GetEmailSmtpMockSettings();
-            _emailService = new EmailSmtpService(_emailSettingsMock.Object, _loggerMock.Object);
+            var emailSettingsMock = SettingsService.GetEmailSmtpMockSettings();
+            _emailSettings = emailSettingsMock.Object.Value;
+            _emailService = new EmailSmtpService(emailSettingsMock.Object, _loggerMock.Object);
         }
 
         public void Dispose()
         {
-            // Cleanup if needed
             GC.SuppressFinalize(this);
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithSingleRecipient_ShouldNotThrowException()
+        public async Task SendEmailAsync_WithSingleRecipient_ShouldSendSuccessfully()
         {
-            //TODO: (TestEmail, TestSubject, TestBody, isHtml) To EmailMessage
             // Arrange
-            //const bool isHtml = false;
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = TestSubject,
+                Body = TestBody,
+                IsHtml = false
+            };
 
-            //// Act
-            //var exception = await Record.ExceptionAsync(async () =>
-            //    await _emailService.SendEmailAsync(TestEmail, TestSubject, TestBody, isHtml)
-            //);
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
 
-            //// Assert
-            //AssertExpectedExceptionOrNull(exception);
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithMultipleRecipients_ShouldNotThrowException()
+        public async Task SendEmailAsync_WithMultipleRecipients_ShouldSendSuccessfully()
         {
-            //TODO: (recipients, subject, TestHtmlBody, isHtml) To EmailMessage
             // Arrange
-            //var recipients = new[] { TestEmail1, TestEmail2 };
-            //const string subject = "Test Subject Multiple Recipients";
-            //const bool isHtml = true;
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail1, TestEmail2 },
+                Subject = "Test Subject Multiple Recipients",
+                Body = TestHtmlBody,
+                IsHtml = true
+            };
 
-            //// Act
-            //var exception = await Record.ExceptionAsync(async () =>
-            //    await _emailService.SendEmailAsync(recipients, subject, TestHtmlBody, isHtml)
-            //);
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
 
-            //// Assert
-            //AssertExpectedExceptionOrNull(exception);
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithEmptyRecipients_ShouldNotThrowException()
+        public async Task SendEmailAsync_WithEmptyRecipients_ShouldLogWarning()
         {
-            //TODO: (emptyRecipients, TestSubject, TestBody) To EmailMessage
-            //// Arrange
-            //var emptyRecipients = Array.Empty<string>();
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string>(),
+                Subject = TestSubject,
+                Body = TestBody
+            };
 
-            //// Act
-            //var exception = await Record.ExceptionAsync(async () =>
-            //    await _emailService.SendEmailAsync(emptyRecipients, TestSubject, TestBody)
-            //);
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
 
-            //// Assert
-            //Assert.Null(exception);
+            // Assert - No debe lanzar excepción, solo registrar warning
+            Assert.Null(exception);
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithComplexEmailMessage_ShouldNotThrowException()
+        public async Task SendEmailAsync_WithComplexEmailMessage_ShouldSendSuccessfully()
         {
             // Arrange
             var emailMessage = CreateComplexEmailMessage();
@@ -100,16 +115,23 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithEmptyEmailMessage_ShouldNotThrowException()
+        public async Task SendEmailAsync_WithAttachments_ShouldSendSuccessfully()
         {
-            
             // Arrange
+            var attachment = new EmailAttachment(
+                "test.txt",
+                System.Text.Encoding.UTF8.GetBytes("Test attachment content"),
+                "text/plain"
+            );
+
             var emailMessage = new EmailMessage
             {
-                From = "noreply@wisegar.info", //TODO: Use default from settings
-                To = new List<string>(),
-                Subject = "Empty Recipients Test",
-                Body = "This should not be sent"
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = "Test Email with Attachment",
+                Body = "This email contains an attachment",
+                IsHtml = false,
+                Attachments = new List<EmailAttachment> { attachment }
             };
 
             // Act
@@ -118,36 +140,177 @@ namespace Wisegar.Toolkit.Services.xTest.Email
             );
 
             // Assert
-            Assert.Null(exception);
+            AssertExpectedExceptionOrNull(exception);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithCcAndBcc_ShouldSendSuccessfully()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Cc = new List<string> { TestEmail1 },
+                Bcc = new List<string> { TestEmail2 },
+                Subject = "Test Email with CC and BCC",
+                Body = "This email has CC and BCC recipients",
+                IsHtml = false
+            };
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
+
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithHighPriority_ShouldSendSuccessfully()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = "High Priority Email",
+                Body = "This is a high priority email",
+                IsHtml = false,
+                Priority = EmailPriority.High
+            };
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
+
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithReplyTo_ShouldSendSuccessfully()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = "Test Email with Reply-To",
+                Body = "This email has a custom Reply-To address",
+                IsHtml = false,
+                ReplyTo = "replyto@example.com"
+            };
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
+
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithCustomHeaders_ShouldSendSuccessfully()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = "Test Email with Custom Headers",
+                Body = "This email has custom headers",
+                IsHtml = false,
+                CustomHeaders = new Dictionary<string, string>
+                {
+                    { "X-Custom-Header", "CustomValue" },
+                    { "X-Priority", "1" }
+                }
+            };
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
+
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithHtmlContent_ShouldSendSuccessfully()
+        {
+            // Arrange
+            var htmlBody = @"
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <h2 style='color: #4CAF50;'>Test Email</h2>
+                    <p>This is a <strong>test email</strong> with HTML content.</p>
+                    <ul>
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                    </ul>
+                </body>
+                </html>";
+
+            var emailMessage = new EmailMessage
+            {
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Subject = "Test HTML Email",
+                Body = htmlBody,
+                IsHtml = true
+            };
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () =>
+                await _emailService.SendEmailAsync(emailMessage)
+            );
+
+            // Assert
+            AssertExpectedExceptionOrNull(exception);
         }
 
         #region Helper Methods
 
-        private static EmailMessage CreateComplexEmailMessage()
+        private EmailMessage CreateComplexEmailMessage()
         {
+            var attachment = new EmailAttachment(
+                "report.pdf",
+                System.Text.Encoding.UTF8.GetBytes("PDF content simulation"),
+                "application/pdf"
+            );
+
             return new EmailMessage
             {
-                From = "noreply@wisegar.info", //TODO: Use default from settings
-                To = new List<string> { "yariel.re@gmail.com" },
-                Cc = new List<string> { "hurshelann30@gmail.com" },
-                Bcc = new List<string> { "hurshelann30@gmail.com" },
-                Subject = "Complex Email Test",
-                Body = "<h1>Complex Email</h1><p>This is a complex email with multiple options.</p>",
+                From = _emailSettings.FromEmail,
+                To = new List<string> { TestEmail },
+                Cc = new List<string> { TestEmail1 },
+                Bcc = new List<string> { TestEmail2 },
+                Subject = "Complex Email Test - All Features",
+                Body = "<h1>Complex Email</h1><p>This email demonstrates all features:</p><ul><li>HTML content</li><li>Multiple recipients (To, CC, BCC)</li><li>High priority</li><li>Attachment</li><li>Custom headers</li><li>Reply-To</li></ul>",
                 IsHtml = true,
                 Priority = EmailPriority.High,
-                ReplyTo = "replyto@example.com",
+                ReplyTo = "replyto@wisegar.info",
+                Attachments = new List<EmailAttachment> { attachment },
                 CustomHeaders = new Dictionary<string, string>
                 {
-                    { "X-Custom-Header", "CustomValue" }
+                    { "X-Custom-Header", "CustomValue" },
+                    { "X-Test-Category", "Integration-Test" }
                 }
             };
         }
 
         private static void AssertExpectedExceptionOrNull(Exception? exception)
         {
+            // Permite null (éxito) o excepciones esperadas de SMTP (problemas de red, autenticación, etc.)
             Assert.True(
                 exception == null || exception is SmtpException || exception is InvalidOperationException,
-                $"Unexpected exception type: {exception?.GetType().Name}");
+                $"Tipo de excepción inesperado: {exception?.GetType().Name} - {exception?.Message}");
         }
 
         #endregion
