@@ -21,7 +21,7 @@ namespace Wisegar.Toolkit.Services.Samples
         /// <summary>
         /// Example of HTML email to multiple recipients
         /// </summary>
-        public static async Task SendHtmlEmailExample(IEmailService emailService)
+        public static void SendHtmlEmailExample(IEmailService emailService)
         {
             var destinatarios = new[] { "admin@company.com", "support@company.com" };
             var htmlBody = @"
@@ -43,6 +43,7 @@ namespace Wisegar.Toolkit.Services.Samples
             //    body: htmlBody,
             //    isHtml: true
             //);
+            Console.Write(htmlBody);
         }
 
         /// <summary>
@@ -56,9 +57,10 @@ namespace Wisegar.Toolkit.Services.Samples
 
             var emailMessage = new EmailMessage
             {
-                To = new List<string> { "manager@company.com", "CEO@company.com" },
-                Cc = new List<string> { "admin@company.com" },
-                Bcc = new List<string> { "audit@company.com" },
+                From = "manager@company.com",
+                To = ["manager@company.com", "CEO@company.com"],
+                Cc = ["admin@company.com"],
+                Bcc = ["audit@company.com"],
                 Subject = "Monthly Report - CONFIDENTIAL",
                 Body = @"
                     <html>
@@ -79,7 +81,7 @@ namespace Wisegar.Toolkit.Services.Samples
                     </html>",
                 IsHtml = true,
                 Priority = EmailPriority.High,
-                Attachments = new List<EmailAttachment> { attachment },
+                Attachments = [attachment],
                 ReplyTo = "noreply@company.com",
                 CustomHeaders = new Dictionary<string, string>
                 {
@@ -94,7 +96,7 @@ namespace Wisegar.Toolkit.Services.Samples
         /// <summary>
         /// Welcome email example with template
         /// </summary>
-        public static async Task SendWelcomeEmailExample(IEmailService emailService, string userName, string userEmail)
+        public static void SendWelcomeEmailExample(IEmailService emailService, string userName, string userEmail)
         {
             var welcomeTemplate = $@"
                 <html>
