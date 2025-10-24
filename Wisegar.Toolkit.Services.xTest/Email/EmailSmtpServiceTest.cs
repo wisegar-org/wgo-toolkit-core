@@ -35,7 +35,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithSingleRecipient_ShouldNotThrowException()
+        public void SendEmailAsync_WithSingleRecipient_ShouldNotThrowException()
         {
             //TODO: (TestEmail, TestSubject, TestBody, isHtml) To EmailMessage
             // Arrange
@@ -51,7 +51,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithMultipleRecipients_ShouldNotThrowException()
+        public void SendEmailAsync_WithMultipleRecipients_ShouldNotThrowException()
         {
             //TODO: (recipients, subject, TestHtmlBody, isHtml) To EmailMessage
             // Arrange
@@ -69,7 +69,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithEmptyRecipients_ShouldNotThrowException()
+        public void SendEmailAsync_WithEmptyRecipients_ShouldNotThrowException()
         {
             //TODO: (emptyRecipients, TestSubject, TestBody) To EmailMessage
             //// Arrange
