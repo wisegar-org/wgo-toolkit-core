@@ -15,9 +15,7 @@ namespace Wisegar.Toolkit.Models.Email
         public bool EnableSsl { get; set; } = true;
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string FromEmail { get; set; } = string.Empty;
-        public string FromName { get; set; } = string.Empty;
-        public List<string> ToEmails { get; set; } = new();
-        public string Subject { get; set; } = string.Empty;
+        public string From { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }
