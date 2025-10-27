@@ -42,7 +42,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
                     </html>",
                 IsHtml = true,
                 Priority = EmailPriority.High,
-                ReplyTo = "noreply@gmail.com",
+                ReplyTo = "yariel.re@gmail.com",
                 CustomHeaders = new Dictionary<string, string>
                 {
                     { "X-Category", "Monthly-Report" },
