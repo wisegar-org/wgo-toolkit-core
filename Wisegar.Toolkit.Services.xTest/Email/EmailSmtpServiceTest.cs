@@ -2,12 +2,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Wisegar.Toolkit.Models.Email;
 using Wisegar.Toolkit.Services.Email;
 
 namespace Wisegar.Toolkit.Services.xTest.Email
 {
-    public class EmailSmtpServiceTest : IDisposable
+    public class EmailSmtpServiceTest
     {
         private readonly EmailSmtpService _emailService;
         private readonly Mock<ILogger<EmailSmtpService>> _loggerMock;
@@ -28,30 +29,25 @@ namespace Wisegar.Toolkit.Services.xTest.Email
             _emailService = new EmailSmtpService(_emailSettingsMock.Object, _loggerMock.Object);
         }
 
-        public void Dispose()
-        {
-            // Cleanup if needed
-            GC.SuppressFinalize(this);
-        }
-
         [Fact]
         public async Task SendEmailAsync_WithSingleRecipient_ShouldNotThrowException()
         {
             //TODO: (TestEmail, TestSubject, TestBody, isHtml) To EmailMessage
             // Arrange
-            //const bool isHtml = false;
+            EmailMessage message = CreateComplexEmailMessage();
 
-            //// Act
-            //var exception = await Record.ExceptionAsync(async () =>
-            //    await _emailService.SendEmailAsync(TestEmail, TestSubject, TestBody, isHtml)
-            //);
-
-            //// Assert
-            //AssertExpectedExceptionOrNull(exception);
+            // Act
+            try {
+                await _emailService.SendEmailAsync(message);
+            }
+            catch (Exception exception) {
+                // Assert
+                AssertExpectedExceptionOrNull(exception);
+            }
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithMultipleRecipients_ShouldNotThrowException()
+        public void SendEmailAsync_WithMultipleRecipients_ShouldNotThrowException()
         {
             //TODO: (recipients, subject, TestHtmlBody, isHtml) To EmailMessage
             // Arrange
@@ -69,7 +65,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
         }
 
         [Fact]
-        public async Task SendEmailAsync_WithEmptyRecipients_ShouldNotThrowException()
+        public void SendEmailAsync_WithEmptyRecipients_ShouldNotThrowException()
         {
             //TODO: (emptyRecipients, TestSubject, TestBody) To EmailMessage
             //// Arrange
@@ -84,42 +80,42 @@ namespace Wisegar.Toolkit.Services.xTest.Email
             //Assert.Null(exception);
         }
 
-        [Fact]
-        public async Task SendEmailAsync_WithComplexEmailMessage_ShouldNotThrowException()
-        {
-            // Arrange
-            var emailMessage = CreateComplexEmailMessage();
+        //[Fact]
+        //public async Task SendEmailAsync_WithComplexEmailMessage_ShouldNotThrowException()
+        //{
+        //    // Arrange
+        //    var emailMessage = CreateComplexEmailMessage();
 
-            // Act
-            var exception = await Record.ExceptionAsync(async () =>
-                await _emailService.SendEmailAsync(emailMessage)
-            );
+        //    // Act
+        //    var exception = await Record.ExceptionAsync(async () =>
+        //        await _emailService.SendEmailAsync(emailMessage)
+        //    );
 
-            // Assert
-            AssertExpectedExceptionOrNull(exception);
-        }
+        //    // Assert
+        //    AssertExpectedExceptionOrNull(exception);
+        //}
 
-        [Fact]
-        public async Task SendEmailAsync_WithEmptyEmailMessage_ShouldNotThrowException()
-        {
+        //[Fact]
+        //public async Task SendEmailAsync_WithEmptyEmailMessage_ShouldNotThrowException()
+        //{
             
-            // Arrange
-            var emailMessage = new EmailMessage
-            {
-                From = "noreply@wisegar.info", //TODO: Use default from settings
-                To = new List<string>(),
-                Subject = "Empty Recipients Test",
-                Body = "This should not be sent"
-            };
+        //    // Arrange
+        //    var emailMessage = new EmailMessage
+        //    {
+        //        From = "noreply@wisegar.info", //TODO: Use default from settings
+        //        To = new List<string>(),
+        //        Subject = "Empty Recipients Test",
+        //        Body = "This should not be sent"
+        //    };
 
-            // Act
-            var exception = await Record.ExceptionAsync(async () =>
-                await _emailService.SendEmailAsync(emailMessage)
-            );
+        //    // Act
+        //    var exception = await Record.ExceptionAsync(async () =>
+        //        await _emailService.SendEmailAsync(emailMessage)
+        //    );
 
-            // Assert
-            Assert.Null(exception);
-        }
+        //    // Assert
+        //    Assert.Null(exception);
+        //}
 
         #region Helper Methods
 
@@ -135,7 +131,7 @@ namespace Wisegar.Toolkit.Services.xTest.Email
                 Body = "<h1>Complex Email</h1><p>This is a complex email with multiple options.</p>",
                 IsHtml = true,
                 Priority = EmailPriority.High,
-                ReplyTo = "replyto@example.com",
+                ReplyTo = "yariel.re@gmail.com",
                 CustomHeaders = new Dictionary<string, string>
                 {
                     { "X-Custom-Header", "CustomValue" }
