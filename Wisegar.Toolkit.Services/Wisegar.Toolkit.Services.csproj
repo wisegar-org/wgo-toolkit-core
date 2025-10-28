@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.17.0" />
+    <PackageReference Include="Google.Apis" Version="1.72.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.72.0" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.70.0.3833" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
