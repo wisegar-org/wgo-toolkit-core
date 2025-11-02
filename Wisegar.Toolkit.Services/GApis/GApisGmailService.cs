@@ -15,18 +15,13 @@ namespace Wisegar.Toolkit.Services.GApis
             _gapisSettings = gapisSettings.Value;
         }
 
-        [Obsolete]
+        [Obsolete("This method needs to be refactored")]
         public GmailService GetServiceConnection()
         {
             var userToImpersonate = _gapisSettings.UserName;
             var serviceAccountJsonPath = _gapisSettings.JsonPath;
 
             string[] scopes = { GmailService.Scope.GmailSend };
-
-
-            using var stream = File.OpenRead(path);
-            var json = await JsonDocument.ParseAsync(stream);
-
 
             GoogleCredential credential;
 
@@ -42,7 +37,6 @@ namespace Wisegar.Toolkit.Services.GApis
                 HttpClientInitializer = credential,
                 ApplicationName = "Wisegar Gmail API Client"
             });
-
         }
     }
 }

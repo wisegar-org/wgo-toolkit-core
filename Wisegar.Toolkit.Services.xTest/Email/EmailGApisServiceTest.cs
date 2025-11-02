@@ -1,12 +1,6 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wisegar.Toolkit.Models.Email;
 using Wisegar.Toolkit.Services.Email;
-using Wisegar.Toolkit.Services.GApis;
 
 namespace Wisegar.Toolkit.Services.xTest.Email
 {
@@ -21,11 +15,20 @@ namespace Wisegar.Toolkit.Services.xTest.Email
             _emailService = new EmailGApisService(emailSettingsMock.Object, loggerMock.Object);
         }
 
-        [Fact]
+        [Fact(Skip = "Google APIs service needs Service Account JSON configuration")]
         public async Task SendSimpleEmailTestAsync()
         {
-         
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = "test@example.com",
+                To = new List<string> { "recipient@example.com" },
+                Subject = "Test Email via Google API",
+                Body = "This is a test email sent via Google Gmail API",
+                IsHtml = false
+            };
 
+            // Act & Assert
             try
             {
                 await _emailService.SendEmailAsync(emailMessage);
